@@ -5,7 +5,7 @@ from helpers import ARKUSZE
 from cabinets import Wycena, SzafkaDolna, SzafkaGorna
 from nesting import wykonaj_nesting
 
-# Inicjalizacja session_state
+
 if 'szafki' not in st.session_state:
     st.session_state.szafki = []
     st.session_state.wycena = Wycena()
@@ -18,7 +18,7 @@ wybor_arkusza = st.sidebar.selectbox("Choose board size:", options=arkusz_keys,
                                      format_func=lambda x: f"{ARKUSZE[x][0]} x {ARKUSZE[x][1]}")
 st.session_state.ARKUSZ_SZEROKOSC, st.session_state.ARKUSZ_WYSOKOSC = ARKUSZE[wybor_arkusza]
 
-# Parametry szafki
+# cabinet features
 typ_szafki = st.sidebar.selectbox("Cabinet type", ["Base", "Wall"])
 szerokosc = st.sidebar.number_input("Width (mm)", min_value=100, max_value=1200, value=600, step=50)
 wysokosc = st.sidebar.number_input("Height (mm)", min_value=100, max_value=2400, value=720, step=50)
@@ -50,15 +50,10 @@ elif typ_szafki == "Wall":
 rotation_option = st.sidebar.radio("Does grain direction matter?", ["Yes", "No"])
 st.session_state.ROTATION = False if rotation_option == "Yes" else True
 
-# st.sidebar.write("### Order list:")
-# for i, szafka in enumerate(st.session_state.szafki):
-# st.sidebar.write(f"**{i+1}.** {szafka.__class__.__name__} - {szafka.szerokosc}x{szafka.wysokosc}x{szafka.glebokosc} mm, {szafka.ilosc} szt.")
-
 MAPOWANIE_NAZW = {
     "SzafkaGorna": "Wall cabinet",
     "SzafkaDolna": "Base cabinet"
 }
-
 st.sidebar.write("### Order list:")
 for i, szafka in enumerate(st.session_state.szafki):
     nazwa_szafki = MAPOWANIE_NAZW.get(szafka.__class__.__name__,
@@ -71,23 +66,18 @@ if st.sidebar.button("Reset order list"):
     st.session_state.wycena = Wycena()
     st.sidebar.success("The order list has been cleared!")
 
-# Generowanie wyceny
 st.title("Order details")
 
-# ✅ Przechowywanie wyników w st.session_state, aby nie znikały po kliknięciu drugiego guzika
 if "podsumowanie" not in st.session_state:
     st.session_state.podsumowanie = None
 if "rozrys" not in st.session_state:
     st.session_state.rozrys = None
 
-# Przycisk "Generuj wycenę"
 if st.button("Get report"):
     st.session_state.podsumowanie = st.session_state.wycena.podsumowanie()
 
-# ✅ Wyświetlanie podsumowania wyceny, jeśli istnieje w sesji
 if st.session_state.podsumowanie:
     podsumowanie = st.session_state.podsumowanie
-    # st.header("Podsumowanie wyceny")
 
     st.subheader("Board elements")
     st.write(f"🪵 Elements total: {len(podsumowanie['Płyta meblowa'])}")
@@ -104,14 +94,12 @@ if st.session_state.podsumowanie:
     for akcesorium, ilosc in podsumowanie["Akcesoria"].items():
         st.write(f"🔩 {akcesorium}: {ilosc} pcs.")
 
-# Przycisk "Generuj rozrys"
 if st.button("Optimize cutting"):
     formatki = st.session_state.wycena.podsumowanie()['Płyta meblowa']
     wykonaj_nesting(formatki)  # Wywołanie nestingu
     lista_svg = glob.glob("*.svg")
     st.session_state.rozrys = lista_svg
 
-# ✅ Wyświetlanie rozrysów, jeśli istnieją w sesji
 if st.session_state.rozrys:
     st.subheader("Cutting plan preview")
     for sciezka_svg in st.session_state.rozrys:
@@ -128,4 +116,4 @@ if st.session_state.rozrys:
 
     for sciezka_svg in lista_svg:
         os.remove(sciezka_svg)
-    # st.success("Pliki SVG zostały usunięte po załadowaniu.")
+
