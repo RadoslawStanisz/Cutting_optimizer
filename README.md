@@ -33,11 +33,11 @@ This application is designed for professional woodworkers to automate the cost e
 
 ### About Guillotine Algorithms
 
-Guillotine algorithms are a family of cutting algorithms used for material optimization. They work by recursively dividing a sheet into smaller rectangles with straight cuts, similar to how a guillotine slices through paper. These algorithms are particularly useful where minimizing waste is crucial. The application leverages guillotine algorithms in the nesting process to efficiently arrange cabinet components on available sheets. Sometimes due to design requirements it is necessary to cut the material (chipboard, plywood, etc.) in a way that is not optimal. For example, if wood grain direction matter. In these cases user needs to specify it in sidebar:
+Guillotine algorithms are a family of cutting algorithms used for material optimization. They work by recursively dividing a sheet into smaller rectangles with straight cuts, similar to how a guillotine slices through paper. These algorithms are particularly useful where minimizing waste is crucial. The application leverages guillotine algorithms in the nesting process to efficiently arrange cabinet components on available sheets. Sometimes due to design requirements it is necessary to cut the material (chipboard, plywood, etc.) in a way that is not optimal. For example, if wood grain direction matter. In these cases user needs to specify it in the sidebar:
 
 ![image](https://github.com/user-attachments/assets/c8399008-7fbe-4c97-9354-b012566edf2b) 
 
-Otherwise the app by default may rotate the cabinets' elements focusing only on minimizing waste. 
+Otherwise the app by default may rotate the cabinets' elements focusing only on minimizing waste. There are many different types of guillotine algorithms and there's no best one as the performance depends on the particular input. Therefore, the app iterates over all of them to find the best solution. In this case the best solution is defined as the one with the least number of sheets (boards) used in the process `AND` with the lowest utilization percentage of the last sheet (the remaining/waste part of the sheet can be reused in the future, the bigger it is, the better). The description of the algorithms configurations and input sorting methods can be viewed [here](https://github.com/juj/RectangleBinPack/blob/master/RectangleBinPack.pdf).
 
 
 ### Technologies Used
